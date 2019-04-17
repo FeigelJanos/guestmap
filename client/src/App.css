@@ -37,7 +37,11 @@ body{
     transform: rotate(360deg);
   }
 }
-.map{
-height: 500px;
 
+#root{
+height: 100%;
+}
+
+.map{
+height: 100%;
 }
