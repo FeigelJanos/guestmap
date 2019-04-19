@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { Card, Button, Form, CardTitle, CardText, FormGroup, Label, Input} from 'reactstrap';
 
 var myIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.4.0/dist/images/marker-icon-2x.png',
@@ -20,6 +21,7 @@ class App extends Component {
                 lat: 51.505,
                 lng: -0.09
               },
+    haveUsersLocation: false,
     zoom: 2,
 }
 
@@ -29,8 +31,22 @@ componentDidMount(){
       lat: position.coords.latitude,
       lng: position.coords.longitude
     },
-    haveUsersLocation: false,
+    haveUsersLocation: true,
     zoom: 13
+    });
+   
+  },
+  () => {
+    fetch('https://ipapi.co/json')
+    .then(res => res.json())
+    .then(location =>{
+      this.setState({location: {
+        lat: location.latitude,
+        lng: location.longitude
+      },
+      haveUsersLocation: true,
+      zoom: 13
+      });
     });
   });
 }
@@ -38,6 +54,7 @@ componentDidMount(){
   render() {
     const position = [this.state.location.lat, this.state.location.lng]
     return (
+      <React.Fragment className='map'>
       <Map className='map' center={position} zoom={this.state.zoom}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -53,6 +70,23 @@ componentDidMount(){
         }
 
 </Map>
+<Card body className='message-form'>
+  <CardTitle>Welcome to Guestmap!</CardTitle>
+  <CardText>Leave a message with your location!</CardText>
+  <CardText>Thanks for stopping by!</CardText>
+  <Form>
+        <FormGroup>
+          <Label for="name">Name</Label>
+          <Input plaintext value="Enter your name!" id="name" type="text" name="name"/>
+        </FormGroup>
+        <FormGroup>
+          <Label for="message">Message</Label>
+          <Input plaintext value="Enter a message!" id="message" type="textarea" name="message"/>
+        </FormGroup>
+        <Button color="info" type="submit">Send</Button>
+  </Form>
+</Card>
+</React.Fragment>
     );
   }
 }
