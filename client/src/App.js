@@ -23,6 +23,10 @@ class App extends Component {
               },
     haveUsersLocation: false,
     zoom: 2,
+    userMessage: {
+                  name: '',
+                  message: ''
+                }
 }
 
 componentDidMount(){
@@ -51,6 +55,19 @@ componentDidMount(){
   });
 }
 
+formSubmitted = (event)=>{
+  event.preventDefault();
+};
+
+valueChanged = (event)=>{
+  const {name, value} = event.target;
+  this.setState((prevState)=>({
+   userMessage: {
+      [name]: value
+    } 
+  }))
+};
+
   render() {
     const position = [this.state.location.lat, this.state.location.lng]
     return (
@@ -74,16 +91,28 @@ componentDidMount(){
   <CardTitle>Welcome to Guestmap!</CardTitle>
   <CardText>Leave a message with your location!</CardText>
   <CardText>Thanks for stopping by!</CardText>
-  <Form>
+  <Form onSubmit={this.formSubmitted}>
         <FormGroup>
           <Label for="name">Name</Label>
-          <Input plaintext value="Enter your name!" id="name" type="text" name="name"/>
+          <Input 
+            onChange={this.valueChanged}
+            plaintext value="Enter your name!" 
+            id="name" 
+            type="text" 
+            name="name"
+          />
         </FormGroup>
         <FormGroup>
           <Label for="message">Message</Label>
-          <Input plaintext value="Enter a message!" id="message" type="textarea" name="message"/>
+          <Input 
+            onChange={this.valueChanged}
+            plaintext value="Enter a message!" 
+            id="message" 
+            type="textarea" 
+            name="message"
+          />
         </FormGroup>
-        <Button color="info" type="submit">Send</Button>
+        <Button color="info" type="submit" disabled={!this.state.haveUsersLocation}>Send</Button>
   </Form>
 </Card>
 </React.Fragment>
